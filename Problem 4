@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <time.h>
+
+#define NUM_RANDOM_NUMBERS 10000
+#define LAMBDA 0.5
+
+double generate_exponential_random(double lambda) {
+    double u = ((double) rand() / (RAND_MAX));
+    return -lambda * log(1 - u);
+}
+
+int main() {
+    double numbers[NUM_RANDOM_NUMBERS];
+
+    // Seed the random number generator
+    srand((unsigned int) time(NULL));
+
+    // Generate NUM_RANDOM_NUMBERS exponential random numbers
+    for (int i = 0; i < NUM_RANDOM_NUMBERS; i++) {
+        numbers[i] = generate_exponential_random(LAMBDA);
+    }
+
+    // Save the numbers to a file
+    FILE *file = fopen("exponential_random_numbers.txt", "w");
+    if (file == NULL) {
+        fprintf(stderr, "Error opening file.\n");
+        return 1;
+    }
+
+    for (int i = 0; i < NUM_RANDOM_NUMBERS; i++) {
+        fprintf(file, "%f\n", numbers[i]);
+    }
+
+    fclose(file);
+
+    return 0;
+}
