@@ -1,0 +1,12 @@
+#problem 2
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+x = np.random.rand(10000)
+
+plt.hist(x, bins=10,color='blue')
+plt.xlabel('numbers')
+plt.ylabel('frequency')
+plt.title('Density Histogram')
+plt.show()
