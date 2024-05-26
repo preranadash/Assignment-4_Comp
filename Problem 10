@@ -1,0 +1,117 @@
+import numpy as np
+import emcee
+import corner
+import matplotlib.pyplot as plt
+
+# Data
+data = np.array([
+    [1, 201, 592, 61],
+    [2, 244, 401, 25],
+    [3,  47, 583, 38],
+    [4, 287, 402, 15],
+    [5, 203, 495, 21],
+    [6,  58, 173, 15],
+    [7, 210, 479, 27],
+    [8, 202, 504, 14],
+    [9, 198, 510, 30],
+    [10, 158, 416, 16],
+    [11, 165, 393, 14],
+    [12, 201, 442, 25],
+    [13, 157, 317, 52],
+    [14, 131, 311, 16],
+    [15, 166, 400, 34],
+    [16, 160, 337, 31],
+    [17, 186, 423, 42],
+    [18, 125, 334, 26],
+    [19, 218, 533, 16],
+    [20, 146, 344, 22]
+])
+
+x = data[:, 1]
+y = data[:, 2]
+sigma = data[:, 3]
+
+def model(x, a, b, c):
+    return a * x**2 + b * x + c
+
+def log_likelihood(params, x, y, sigma):
+    a, b, c = params
+    model_y = model(x, a, b, c)
+    return -0.5 * np.sum(((y - model_y) / sigma) ** 2 + np.log(2 * np.pi * sigma**2))
+
+def log_prior(params):
+    a, b, c = params
+    if -1000 < a < 1000 and -1000 < b < 1000 and -1000 < c < 1000:
+        return 0.0
+    return -np.inf
+
+def log_posterior(params, x, y, sigma):
+    lp = log_prior(params)
+    if not np.isfinite(lp):
+        return -np.inf
+    return lp + log_likelihood(params, x, y, sigma)
+
+# Initial guesses for the parameters
+initial = np.array([1.0, 1.0, 1.0])
+
+# Number of dimensions (parameters)
+ndim = len(initial)
+
+# Number of walkers
+nwalkers = 50
+
+# Number of steps
+nsteps = 4000
+
+# Initial positions of the walkers
+pos = initial + 1e-4 * np.random.randn(nwalkers, ndim)
+
+# Set up the sampler
+sampler = emcee.EnsembleSampler(nwalkers, ndim, log_posterior, args=(x, y, sigma))
+
+# Run the MCMC
+sampler.run_mcmc(pos, nsteps, progress=True)
+
+# Plot all chains
+fig, axes = plt.subplots(ndim, figsize=(10, 7), sharex=True)
+labels = ["a", "b", "c"]
+for i in range(ndim):
+    ax = axes[i]
+    ax.plot(sampler.chain[:, :, i].T, color="k", alpha=0.3)
+    ax.set_xlim(0, nsteps)
+    ax.set_ylabel(labels[i])
+    ax.yaxis.set_label_coords(-0.1, 0.5)
+
+axes[-1].set_xlabel("Step number")
+plt.show()
+
+# Get the samples
+samples = sampler.get_chain(discard=100, thin=15, flat=True)
+
+# Plot the corner plot
+fig = corner.corner(samples, labels=["a", "b", "c"])
+plt.show()
+
+# Calculate the median and the 16th and 84th percentiles
+a_mcmc, b_mcmc, c_mcmc = map(lambda v: (v[1], v[2]-v[1], v[1]-v[0]),
+                             zip(*np.percentile(samples, [16, 50, 84], axis=0)))
+
+print(f"a = {a_mcmc[0]:.3f} +{a_mcmc[1]:.3f} -{a_mcmc[2]:.3f}")
+print(f"b = {b_mcmc[0]:.3f} +{b_mcmc[1]:.3f} -{b_mcmc[2]:.3f}")
+print(f"c = {c_mcmc[0]:.3f} +{c_mcmc[1]:.3f} -{c_mcmc[2]:.3f}")
+
+# Plot the data with the best-fit model and 200 models from the posterior
+plt.errorbar(x, y, yerr=sigma, fmt='o', label='Data', color='black')
+
+# Best-fit model
+best_fit_y = model(x, a_mcmc[0], b_mcmc[0], c_mcmc[0])
+plt.plot(x, best_fit_y, label='Best-fit model', color='red')
+
+# 200 models from the posterior
+for params in samples[np.random.randint(len(samples), size=200)]:
+    plt.plot(x, model(x, *params), color="gray", alpha=0.1)
+
+plt.xlabel("x")
+plt.ylabel("y")
+plt.legend()
+plt.show()
