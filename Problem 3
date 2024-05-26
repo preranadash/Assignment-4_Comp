@@ -58,3 +58,7 @@ plt.xlabel('numbers')
 plt.ylabel('frequency')
 plt.title('Density Histogram')
 plt.show()
+
+# Output is : Time taken to generate 10,000 numbers using LCG: 0.006818 seconds
+Time taken to generate 10,000 uniform deviates: 0.001001 seconds
+
