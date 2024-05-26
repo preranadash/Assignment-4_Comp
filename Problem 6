@@ -24,6 +24,7 @@ for i in range(10000):
 plt.plot(x_val,f(x_val),label='err func')
 plt.scatter(box_x,box_y,label='box')
 plt.scatter(x_good,y_good,color = 'red',label='accept')
-
+plt.xlabel('x values')
+plt.ylabel('Y values')
 plt.legend()
 plt.show()
