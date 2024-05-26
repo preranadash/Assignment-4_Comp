@@ -15,4 +15,4 @@ plt.ylabel('frequency')
 plt.title('Density Histogram')
 plt.show()
 
-# output is: Time taken to generate 10,000 numbers using LCG: 0.006818 seconds
+
