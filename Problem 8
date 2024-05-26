@@ -29,3 +29,6 @@ print(f"Estimated area of the unit circle: {area_circle}")
 # Estimate the volume of the 10D unit sphere
 volume_sphere_10d = monte_carlo_sphere_10d(num_samples)
 print(f"Estimated volume of the 10-dimensional unit sphere: {volume_sphere_10d}")
+
+#output is: Estimated area of the unit circle: 3.140596
+Estimated volume of the 10-dimensional unit sphere: 2.538496
