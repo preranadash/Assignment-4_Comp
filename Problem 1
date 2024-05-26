@@ -1,0 +1,16 @@
+#problem 1
+import matplotlib.pyplot as plt
+
+a = 12345455 #multiplier
+c = 67589 #increment
+m = 2**50 #modulus
+x = [1] #seed
+
+for i in range(9999):
+    x.append((a * x[i] + c) % m)
+    
+plt.hist(x, bins=10,color='blue')
+plt.xlabel('numbers')
+plt.ylabel('frequency')
+plt.title('Density Histogram')
+plt.show()
