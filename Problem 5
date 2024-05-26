@@ -1,0 +1,31 @@
+#problem 5
+import numpy as np
+import matplotlib.pyplot as plt
+
+def y1(x1, x2):
+    return np.sqrt(-2*np.log(x1)) * np.cos(2*np.pi*x2)
+
+def y2(x1, x2):
+    return np.sqrt(-2*np.log(x1)) * np.sin(2*np.pi*x2)
+
+N = 10000
+
+x_1 = np.random.rand(N)
+x_2 = np.random.rand(N)
+
+y_1 = y1(x_1, x_2)
+y_2 = y2(x_1, x_2)
+
+y_all = np.concatenate((y_1, y_2))
+
+plt.figure(figsize=(10, 6))
+plt.hist(y_all, bins=50, density=True, alpha=0.6, color='blue', label='Generated Gaussian Numbers')
+
+x = np.linspace(-5, 5, 1000)
+gaussian_pdf = (1/np.sqrt(2*np.pi)) * np.exp(-0.5 * x**2)
+
+plt.plot(x, gaussian_pdf, label='Gaussian PDF', color='red')
+plt.xlabel('numbers')
+plt.ylabel('frequency')
+plt.legend()
+plt.show()
