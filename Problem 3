@@ -1,0 +1,60 @@
+# time measurement for problem 1
+
+import matplotlib.pyplot as plt
+import time
+
+# LCG parameters
+a = 12345455  # multiplier
+c = 67589     # increment
+m = 2**50     # modulus
+x = [1]       # seed
+
+# Start the timer
+start_time = time.time()
+
+# Generate 10,000 numbers using LCG
+for i in range(9999):
+    x.append((a * x[i] + c) % m)
+
+# Stop the timer
+end_time = time.time()
+
+# Calculate the elapsed time
+elapsed_time = end_time - start_time
+
+# Print the elapsed time
+print(f"Time taken to generate 10,000 numbers using LCG: {elapsed_time:.6f} seconds")
+
+# Plot the histogram
+plt.hist(x, bins=10, color='blue')
+plt.xlabel('numbers')
+plt.ylabel('frequency')
+plt.title('Density Histogram')
+plt.show()
+
+# time measurement for problem 2
+import numpy as np
+import matplotlib.pyplot as plt
+import time
+
+# Start the timer
+start_time = time.time()
+
+# Generate 10,000 uniform deviates
+x = np.random.rand(10000)
+
+# Stop the timer
+end_time = time.time()
+
+# Calculate the elapsed time
+elapsed_time = end_time - start_time
+
+# Print the elapsed time
+print(f"Time taken to generate 10,000 uniform deviates: {elapsed_time:.6f} seconds")
+
+# Plot the histogram
+plt.hist(x, bins=10, color='blue')
+plt.xlabel('numbers')
+plt.ylabel('frequency')
+plt.title('Density Histogram')
+plt.show()
