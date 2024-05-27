@@ -37,3 +37,25 @@ int main() {
 
     return 0;
 }
+
+#python code to plot the histogram 
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Load the generated random numbers from the file
+data = np.loadtxt('exponential_random_numbers.txt')
+
+# Create the density histogram
+plt.hist(data, bins=50, density=True, alpha=0.6, color='g')
+
+# Plot the exponential PDF for comparison
+mean = 0.5
+x = np.linspace(0, max(data), 1000)
+pdf = (1/mean) * np.exp(-x/mean)
+plt.plot(x, pdf, 'r-', lw=2)
+
+plt.title('Density Histogram and Exponential PDF')
+plt.xlabel('Value')
+plt.ylabel('Density')
+plt.show()
